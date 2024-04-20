@@ -114,6 +114,81 @@ const getallFeedbacks = async(req, res) => {
         res.status(500).json({ message: error.message });
 
     }
+};
+
+
+//remove employee
+const removeemployee = async(req, res) => {
+    try {
+        const { email } = req.body;
+        const employee = await Employee.findOneAndDelete({ email });
+        res.status(200).json({ message: "Employee deleted successfully" });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+
+    }
+
+};
+
+//updateemployeedetails
+const updateemployeesdetails = async(req, res) => {
+    try {
+        const { email, name, phone, password } = req.body;
+        const employee = await Employee.findOne({ email });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+        if (name) {
+            employee.name = name;
+        }
+        if (phone) {
+            employee.phone = phone;
+        }
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 12);
+            employee.password = hashedPassword;
+        }
+
+
+        await employee.save();
+        res.status(200).json({ message: "Employee details updated successfully", employee });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+//update review
+const updatereview = async(req, res) => {
+    try {
+        const { email, feedback, rating } = req.body;
+        const employee = await Employee.findOne({ email });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+        const feedbacks = await Feedback.find({ employee: employee._id });
+        if (!feedbacks) {
+            return res.status(404).json({ message: "Feedback not found" });
+        }
+        if (feedback) {
+            feedbacks.feedback = feedback;
+        }
+        if (rating) {
+            feedbacks.rating = rating;
+        }
+        await feedbacks.save();
+        res.status(200).json({ message: "Feedback updated successfully", feedbacks });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.messgae
+        });
+    }
 }
 
-module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks };
+module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks, removeemployee, updateemployeesdetails, updatereview };
