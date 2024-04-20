@@ -166,29 +166,36 @@ const updateemployeesdetails = async(req, res) => {
 //update review
 const updatereview = async(req, res) => {
     try {
-        const { email, feedback, rating } = req.body;
+        const { email, feedbackId, feedback, rating } = req.body;
+
+        // Find the employee by email
         const employee = await Employee.findOne({ email });
         if (!employee) {
-            return res.status(404).json({ message: "Employee not found" });
+            return res.status(404).json({ message: 'Employee not found' });
         }
-        const feedbacks = await Feedback.find({ employee: employee._id });
-        if (!feedbacks) {
-            return res.status(404).json({ message: "Feedback not found" });
+
+        // Find the feedback document by ID
+        const feedbackDocument = await Feedback.findById(feedbackId);
+        if (!feedbackDocument) {
+            return res.status(404).json({ message: 'Feedback not found' });
         }
+
+        // Update the feedback and rating fields
         if (feedback) {
-            feedbacks.feedback = feedback;
+            feedbackDocument.feedback = feedback;
         }
         if (rating) {
-            feedbacks.rating = rating;
+            feedbackDocument.rating = rating;
         }
-        await feedbacks.save();
-        res.status(200).json({ message: "Feedback updated successfully", feedbacks });
 
+        // Save the updated feedback document
+        await feedbackDocument.save();
+
+        res.status(200).json({ message: 'Feedback updated successfully', feedback: feedbackDocument });
     } catch (error) {
-        res.status(500).json({
-            message: error.messgae
-        });
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 
 module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks, removeemployee, updateemployeesdetails, updatereview };

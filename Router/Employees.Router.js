@@ -6,7 +6,8 @@ const {
     addReview,
     getallFeedbacks,
     removeemployee,
-    updateemployeesdetails
+    updateemployeesdetails,
+    updatereview
 } = require("../Controllers/Employees.Controller");
 
 router.post("/create", createEmployee);
@@ -16,7 +17,7 @@ router.post("/addReview", addReview);
 router.post("/getallemployeesfeedback", getallFeedbacks);
 router.post("/removeemployee", removeemployee);
 router.put("/updateemployeesdetails", updateemployeesdetails);
-router.put("/updateReview", updateReview);
+router.put("/updateReview", updatereview);
 
 
 module.exports = router;
