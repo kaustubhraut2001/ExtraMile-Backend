@@ -1,8 +1,6 @@
-const e = require("express");
 const mongoose = require("mongoose");
 
 const Employee = new mongoose.Schema({
-
     name: {
         type: String,
         required: true
@@ -24,12 +22,8 @@ const Employee = new mongoose.Schema({
         type: String,
         default: 'user'
     },
-
-
-
 }, {
     timestamps: true
 });
 
-
-exports.Employee = mongoose.model("Employee", Employee);
+module.exports = mongoose.model("Employee", Employee);

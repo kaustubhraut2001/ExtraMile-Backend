@@ -1,23 +1,28 @@
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
+const JWT_SECRET = process.env.JWT_SECRET;
 const Employee = require('../Models/Employees.Models');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = process.env.SECRET;
+const Feedback = require('../Models/Feedback.Models');
+
 
 // create new Employee
 const createEmployee = async(req, res) => {
     try {
 
         const { name, email, phone, password, } = req.body;
+        console.log(req.body);
         if (!name || !email || !phone || !password) {
             return res.status(400).json({ message: "All fields are required" });
 
 
         }
         const existingEmployee = await Employee.findOne({ email });
+
         if (existingEmployee) {
             return res.status(400).json({ message: "Employee already exists" });
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 12);
         const employee = new Employee({ name, email, phone, password: hashedPassword });
         await employee.save();
         const token = jwt.sign({ id: employee._id }, JWT_SECRET, { expiresIn: '1h' });
@@ -64,4 +69,51 @@ const getAllEmployees = async(req, res) => {
     }
 };
 
-module.exports = { createEmployee, LoginEmployee, getAllEmployees };
+
+// Add review for other employees
+
+const addReview = async(req, res) => {
+    try {
+        const { email, feedback, rating } = req.body;
+
+        // Find the employee by email
+        const employee = await Employee.findOne({ email });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        // Create a new feedback object and associate it with the employee
+        const newFeedback = new Feedback({
+            employee: employee._id,
+            feedback,
+            rating
+        });
+
+        await newFeedback.save();
+
+        res.status(201).json({ message: "Feedback added successfully", feedback: newFeedback });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// get all Feedbacks for Employee
+
+const getallFeedbacks = async(req, res) => {
+
+    try {
+        const { email } = req.body;
+        const employee = await Employee.findOne({ email });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+        const feedbacks = await Feedback.find({ employee: employee._id });
+        res.status(200).json({ message: "Feedbacks List", feedbacks });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+
+    }
+}
+
+module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks };

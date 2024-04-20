@@ -10,7 +10,7 @@ const Feedback = new mongoose.Schema({
         required: true
     },
     rating: {
-        type: Number,
+        type: String,
         required: true
     },
     date: {
@@ -24,4 +24,4 @@ const Feedback = new mongoose.Schema({
 });
 
 
-exports.Feedback = mongoose.model("Feedback", Feedback);
+module.exports = mongoose.model("Feedback", Feedback);
