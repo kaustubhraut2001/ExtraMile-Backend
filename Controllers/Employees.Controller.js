@@ -51,7 +51,7 @@ const LoginEmployee = async(req, res) => {
         req.employee = employee;
 
         // req.user.role = employee.employee.role;
-        const token = jwt.sign({ id: employee._id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: employee._id }, JWT_SECRET, { expiresIn: '6h' });
         res.status(200).json({ message: "Login successful", employee, token });
 
     } catch (error) {
