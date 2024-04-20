@@ -7,17 +7,20 @@ const {
     getallFeedbacks,
     removeemployee,
     updateemployeesdetails,
-    updatereview
+    updatereview,
+    getAllEmployeesWithFeedback
 } = require("../Controllers/Employees.Controller");
+const { authMiddleware, isAdmin } = require("../Middleware/auth");
 
-router.post("/create", createEmployee);
-router.get("/getAll", getAllEmployees);
+router.post("/create", authMiddleware, createEmployee);
+router.get("/getAll", authMiddleware, getAllEmployees);
 router.post("/login", LoginEmployee);
-router.post("/addReview", addReview);
-router.post("/getallemployeesfeedback", getallFeedbacks);
-router.post("/removeemployee", removeemployee);
-router.put("/updateemployeesdetails", updateemployeesdetails);
-router.put("/updateReview", updatereview);
+router.post("/addReview", authMiddleware, addReview);
+router.post("/getallemployeesfeedback", authMiddleware, isAdmin, getallFeedbacks);
+router.post("/removeemployee", authMiddleware, isAdmin, removeemployee);
+router.put("/updateemployeesdetails", authMiddleware, isAdmin, updateemployeesdetails);
+router.put("/updateReview", authMiddleware, updatereview);
+router.get("/getAllEmployeesWithFeedback", authMiddleware, isAdmin, getAllEmployeesWithFeedback);
 
 
 module.exports = router;

@@ -47,6 +47,10 @@ const LoginEmployee = async(req, res) => {
         if (!isPasswordMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
+
+        req.employee = employee;
+
+        // req.user.role = employee.employee.role;
         const token = jwt.sign({ id: employee._id }, JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ message: "Login successful", employee, token });
 
@@ -197,5 +201,19 @@ const updatereview = async(req, res) => {
     }
 };
 
+// get all employess and theire specific feedback
+const getAllEmployeesWithFeedback = async(req, res) => {
+    try {
+        const employees = await Employee.find();
+        const employeesWithFeedback = await Promise.all(employees.map(async(employee) => {
+            const feedbacks = await Feedback.find({ employee: employee._id });
+            return {...employee._doc, feedbacks };
+        }));
+        res.status(200).json({ message: 'Employees with feedback', employeesWithFeedback });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks, removeemployee, updateemployeesdetails, updatereview };
+
+module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks, removeemployee, updateemployeesdetails, updatereview, getAllEmployeesWithFeedback };
