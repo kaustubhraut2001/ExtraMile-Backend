@@ -18,6 +18,10 @@ const PORT = process.env.PORT || 5000; // getting the port from .env file
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+    "/api/employees",
+    require("./Router/Employees.Router")
+);
 
 // roures
 app.get("/", (req, res) => {
