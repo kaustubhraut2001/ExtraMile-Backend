@@ -26,7 +26,7 @@ router.put("/updateemployeesdetails", authMiddleware, isAdmin, updateemployeesde
 router.put("/updateReview", authMiddleware, updatereview);
 router.get("/getAllEmployeesWithFeedback", authMiddleware, isAdmin, getAllEmployeesWithFeedback);
 router.post("/assigntoemployee", authMiddleware, isAdmin, assigntoemployee);
-router.post("/addreviewpreformace", authMiddleware, addreviewpreformace);
+router.post("/addreviewpreformace/:id", authMiddleware, addreviewpreformace);
 router.get("/getperformacereview/:id", authMiddleware, getperformacereview);
 router.get("/getemployeedetails/:id", authMiddleware, getEmployeeDetails);
 

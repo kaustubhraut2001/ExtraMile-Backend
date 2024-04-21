@@ -250,6 +250,7 @@ const getperformacereview = async(req, res) => {
     try {
         const { id } = req.params;
 
+
         const performanceReviews = await PerformanceReview.find({ reviewee: id });
 
         res.status(200).json(performanceReviews);
@@ -264,6 +265,12 @@ const addreviewpreformace = async(req, res) => {
     try {
         const { id } = req.params;
         const { feedback, rating } = req.body;
+        console.log(req.body, id);
+
+        // Check if employee is authenticated
+        if (!req.employee || !req.employee._id) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
 
         const performanceReview = await PerformanceReview.findById(id);
 
@@ -272,7 +279,7 @@ const addreviewpreformace = async(req, res) => {
         }
 
         const newFeedback = new Feedback({
-            employee: req.user.id,
+            employee: req.employee._id, // Use req.employee._id
             performanceReview: performanceReview._id,
             feedback,
             rating
@@ -286,9 +293,11 @@ const addreviewpreformace = async(req, res) => {
 
         res.status(201).json(newFeedback);
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
+        res.status(500).json({ message: "Server error" });
     }
 };
+
 
 
 // get employee details
