@@ -217,4 +217,76 @@ const getAllEmployeesWithFeedback = async(req, res) => {
 };
 
 
-module.exports = { createEmployee, LoginEmployee, getAllEmployees, addReview, getallFeedbacks, removeemployee, updateemployeesdetails, updatereview, getAllEmployeesWithFeedback };
+// performace recview api
+const assigntoemployee = async(req, res) => {
+    try {
+        const { reviewee, reviewers } = req.body;
+
+        const employee = await Employee.findById(reviewee);
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        const performanceReview = new PerformanceReview({
+            reviewee,
+            reviewers,
+            status: 'pending'
+        });
+
+        await performanceReview.save();
+
+        res.status(201).json(performanceReview);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+
+};
+
+
+// add the review employee
+const addreviewpreformace = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { feedback, rating } = req.body;
+
+        const performanceReview = await PerformanceReview.findById(id);
+
+        if (!performanceReview) {
+            return res.status(404).json({ message: "Performance review not found" });
+        }
+
+        const newFeedback = new Feedback({
+            employee: req.user.id,
+            performanceReview: performanceReview._id,
+            feedback,
+            rating
+        });
+
+        await newFeedback.save();
+
+        performanceReview.feedbacks.push(newFeedback);
+
+        await performanceReview.save();
+
+        res.status(201).json(newFeedback);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+module.exports = {
+    createEmployee,
+    LoginEmployee,
+    getAllEmployees,
+    addReview,
+    getallFeedbacks,
+    removeemployee,
+    updateemployeesdetails,
+    updatereview,
+    getAllEmployeesWithFeedback,
+    assigntoemployee,
+    addreviewpreformace
+};

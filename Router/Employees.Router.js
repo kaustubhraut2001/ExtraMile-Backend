@@ -8,7 +8,9 @@ const {
     removeemployee,
     updateemployeesdetails,
     updatereview,
-    getAllEmployeesWithFeedback
+    getAllEmployeesWithFeedback,
+    assigntoemployee,
+    addreviewpreformace
 } = require("../Controllers/Employees.Controller");
 const { authMiddleware, isAdmin } = require("../Middleware/auth");
 
@@ -21,6 +23,8 @@ router.post("/removeemployee", authMiddleware, isAdmin, removeemployee);
 router.put("/updateemployeesdetails", authMiddleware, isAdmin, updateemployeesdetails);
 router.put("/updateReview", authMiddleware, updatereview);
 router.get("/getAllEmployeesWithFeedback", authMiddleware, isAdmin, getAllEmployeesWithFeedback);
+router.post("/assigntoemployee", authMiddleware, isAdmin, assigntoemployee);
+router.post("/addreviewpreformace", authMiddleware, addreviewpreformace);
 
 
 module.exports = router;

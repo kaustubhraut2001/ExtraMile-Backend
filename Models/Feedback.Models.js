@@ -5,6 +5,10 @@ const Feedback = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Employee"
     },
+    performanceReview: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PerformanceReview"
+    },
     feedback: {
         type: String,
         required: true
