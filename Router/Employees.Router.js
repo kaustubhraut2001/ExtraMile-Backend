@@ -10,7 +10,9 @@ const {
     updatereview,
     getAllEmployeesWithFeedback,
     assigntoemployee,
-    addreviewpreformace
+    addreviewpreformace,
+    getperformacereview,
+    getEmployeeDetails
 } = require("../Controllers/Employees.Controller");
 const { authMiddleware, isAdmin } = require("../Middleware/auth");
 
@@ -25,6 +27,8 @@ router.put("/updateReview", authMiddleware, updatereview);
 router.get("/getAllEmployeesWithFeedback", authMiddleware, isAdmin, getAllEmployeesWithFeedback);
 router.post("/assigntoemployee", authMiddleware, isAdmin, assigntoemployee);
 router.post("/addreviewpreformace", authMiddleware, addreviewpreformace);
+router.get("/getperformacereview/:id", authMiddleware, getperformacereview);
+router.get("/getemployeedetails/:id", authMiddleware, getEmployeeDetails);
 
 
 module.exports = router;

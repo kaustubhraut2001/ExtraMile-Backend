@@ -245,6 +245,19 @@ const assigntoemployee = async(req, res) => {
 
 };
 
+// get all perfomace review for specific employee
+const getperformacereview = async(req, res) => {
+    try {
+        const { id } = req.params;
+
+        const performanceReviews = await PerformanceReview.find({ reviewee: id });
+
+        res.status(200).json(performanceReviews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
 
 // add the review employee
 const addreviewpreformace = async(req, res) => {
@@ -278,6 +291,25 @@ const addreviewpreformace = async(req, res) => {
 };
 
 
+// get employee details
+const getEmployeeDetails = async(req, res) => {
+    try {
+        const { id } = req.params;
+
+        const employee = await Employee.findById(id);
+        console.log(employee)
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        res.status(200).json(employee);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 module.exports = {
     createEmployee,
     LoginEmployee,
@@ -289,5 +321,7 @@ module.exports = {
     updatereview,
     getAllEmployeesWithFeedback,
     assigntoemployee,
-    addreviewpreformace
+    addreviewpreformace,
+    getperformacereview,
+    getEmployeeDetails
 };
