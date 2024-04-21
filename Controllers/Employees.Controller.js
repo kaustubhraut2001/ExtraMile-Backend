@@ -126,7 +126,8 @@ const removeemployee = async(req, res) => {
     try {
         const { email } = req.body;
         const employee = await Employee.findOneAndDelete({ email });
-        res.status(200).json({ message: "Employee deleted successfully" });
+        console.log(employee, "employee")
+        res.status(200).json({ message: "Employee deleted successfully", employees: employee });
     } catch (error) {
         res.status(500).json({
             message: error.message
